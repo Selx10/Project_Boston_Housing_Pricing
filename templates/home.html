@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boston House Price Prediction</title>
+  <link href="https://fonts.googleapis.com/css?family=Pacifico|Arimo|Hind:300|Open+Sans+Condensed:300" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Hind', sans-serif;
+      background: linear-gradient(135deg, #F08080, #F4978E, #F8AD9D);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background: #FBC4AB;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+      max-width: 600px;
+      width: 100%;
+      padding: 50px 40px;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      color: #B04E55;
+      margin-bottom: 40px;
+      font-size: 32px;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.05);
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    form input[type="text"], .prediction-text {
+      padding: 15px 20px;
+      border-radius: 12px;
+      border: 2px solid #F8AD9D;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      width: 100%;
+      background: #FFDAB9;
+      font-family: 'Arimo', sans-serif;
+    }
+
+    form input[type="text"]:focus {
+      outline: none;
+      border-color: #F4978E;
+      box-shadow: 0 0 0 4px rgba(244,151,142,0.2);
+      background: #FFF5F2;
+    }
+
+    .prediction-text {
+      grid-column: span 2;
+      color: #5A2E2E;
+      font-weight: 500;
+      pointer-events: none;
+      text-align: center;
+    }
+
+        
+    button {
+      grid-column: span 2;
+      padding: 18px;
+      background: linear-gradient(135deg, #F4978E, #F08080);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(240,128,128,0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(240,128,128,0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      form input[type="text"], .prediction-text {
+        font-size: 15px;
+        padding: 14px 16px;
+      }
+
+      button {
+        font-size: 16px;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Boston House Price Prediction</h1>
+    <form action="{{ url_for('predict')}}" method="post">
+      <input type="text" name="CRIM" placeholder="CRIM" required>
+      <input type="text" name="ZN" placeholder="ZN" required>
+      <input type="text" name="INDUS" placeholder="INDUS" required>
+      <input type="text" name="CHAS" placeholder="CHAS" required>
+      <input type="text" name="NOX" placeholder="NOX" required>
+      <input type="text" name="RM" placeholder="RM" required>
+      <input type="text" name="Age" placeholder="Age" required>
+      <input type="text" name="DIS" placeholder="DIS" required>
+      <input type="text" name="RAD" placeholder="RAD" required>
+      <input type="text" name="TAX" placeholder="TAX" required>
+      <input type="text" name="PTRATIO" placeholder="PTRATIO" required>
+      <input type="text" name="B" placeholder="B" required>
+      <input type="text" name="LSTAT" placeholder="LSTAT" required>
+      <button type="submit">Predict</button>
+
+      <!-- Prediction placeholder styled as input -->
+      <input type="text" class="prediction-text" placeholder="Prediction will appear here" value="{{ prediction_text }}" readonly>
+    </form>
+  </div>
+</body>
+</html>
