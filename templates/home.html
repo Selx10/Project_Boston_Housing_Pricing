@@ -1,145 +1,389 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boston House Price Prediction</title>
-  <link href="https://fonts.googleapis.com/css?family=Pacifico|Arimo|Hind:300|Open+Sans+Condensed:300" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boston House Price Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind:wght@300;400;500;600&family=Arimo:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+      <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  </head>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Hind', sans-serif;
-      background: linear-gradient(135deg, #F08080, #F4978E, #F8AD9D);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .container {
-      background: #FBC4AB;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-      max-width: 600px;
-      width: 100%;
-      padding: 50px 40px;
-      text-align: center;
-    }
-
-    h1 {
-      font-family: 'Pacifico', cursive;
-      color: #B04E55;
-      margin-bottom: 40px;
-      font-size: 32px;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.05);
-    }
-
-    form {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-
-    form input[type="text"], .prediction-text {
-      padding: 15px 20px;
-      border-radius: 12px;
-      border: 2px solid #F8AD9D;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      width: 100%;
-      background: #FFDAB9;
-      font-family: 'Arimo', sans-serif;
-    }
-
-    form input[type="text"]:focus {
-      outline: none;
-      border-color: #F4978E;
-      box-shadow: 0 0 0 4px rgba(244,151,142,0.2);
-      background: #FFF5F2;
-    }
-
-    .prediction-text {
-      grid-column: span 2;
-      color: #5A2E2E;
-      font-weight: 500;
-      pointer-events: none;
-      text-align: center;
-    }
-
+  <body>
+    <div class="container">
+      <div class="main-grid">
         
-    button {
-      grid-column: span 2;
-      padding: 18px;
-      background: linear-gradient(135deg, #F4978E, #F08080);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 10px;
-      box-shadow: 0 4px 10px rgba(240,128,128,0.3);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+        <!-- Left Panel - Form -->
+        <div class="card">
+          <header class="header">
+            <div class="header-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <h1 class="header-title">Boston House Price Predictor</h1>
+            <p class="header-subtitle">AI-powered property value estimator</p>
+          </header>
+          <form id="predictionForm" class="form" action="{{ url_for('predict') }}" method="POST">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="rooms">Number of Rooms</label>
+                <input type="number" id="rooms" name="rooms" class="form-input" placeholder="e.g., 6" min="1" max="15" step="0.1" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="locationType">Location Type</label>
+                <select id="locationType" name="locationType" class="form-select" required>
+                  <option value="" disabled selected>Select location...</option>
+                  <option value="urban">Urban</option>
+                  <option value="suburban">Suburban</option>
+                  <option value="rural">Rural</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="crimeLevel">Crime Level</label>
+                <select id="crimeLevel" name="crimeLevel" class="form-select" required>
+                  <option value="" disabled selected>Select crime level...</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="propertyAge">Property Age</label>
+                <select id="propertyAge" name="propertyAge" class="form-select" required>
+                  <option value="" disabled selected>Select age...</option>
+                  <option value="new">New</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="old">Old</option>
+                </select>
+              </div>
+              <div class="form-group full-width">
+                <label class="form-label" for="areaQuality">Area Quality</label>
+                <select id="areaQuality" name="areaQuality" class="form-select" required>
+                  <option value="" disabled selected>Select quality...</option>
+                  <option value="premium">Premium</option>
+                  <option value="average">Average</option>
+                  <option value="developing">Developing</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" id="submitBtn" class="btn-primary">
+              <span id="btnText">Predict Price</span>
+              <span id="btnLoading" class="btn-loading hidden">
+                <span class="spinner"></span>
+                Predicting...
+              </span>
+            </button>
+          </form>
+        </div>
+        <!-- Right Panel - Results -->
+        <div id="resultsPanel">
+          
+          <!-- Placeholder (shown when no prediction) -->
+          {% if not prediction_text %}
+          <div id="placeholder" class="card">
+            <div class="results-placeholder">
+              <div class="results-placeholder-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+                </svg>
+              </div>
+              <p>Fill in the form and click Predict<br>to see your property analysis</p>
+            </div>
+          </div>
+          {% endif %}
+          <!-- Results Grid (shown when prediction exists) -->
+          {% if prediction_text %}
+          <div id="resultsGrid" class="card-grid animate-fade-in">
+            
+            <!-- Price Result -->
+            <div class="card card-full">
+              <div class="result-price">
+                <p class="result-price-label">Estimated Price</p>
+                <p class="result-price-value">{{ prediction_text }}</p>
+              </div>
+              <div class="result-divider"></div>
+              <div class="result-insights">
+                <p class="result-insights-label">Insights</p>
+                <div class="insight-item insight-positive">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                  </svg>
+                  <span>{{ livability_label or 'Analysis based on your inputs' }}</span>
+                </div>
+                <div class="insight-item insight-positive">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <span>{{ location_type or 'Location' }} - {{ quality_label or 'Quality Zone' }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Livability Meter -->
+            <div class="card feature-card">
+              <div class="feature-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span class="feature-title">Livability Score</span>
+              </div>
+              <div class="meter-container">
+                <div class="meter-bar">
+                  <div class="meter-fill" style="width: {{ livability_score or 0 }}%"></div>
+                </div>
+                <div class="meter-score">
+                  <span class="meter-score-value">{{ livability_score or 0 }}</span>
+                  <span class="meter-score-max">/100</span>
+                </div>
+              </div>
+              <p class="feature-footer">{{ livability_label or 'Living conditions assessment' }}</p>
+            </div>
+            
+            <!-- Location Badge -->
+            <div class="card feature-card">
+              <div class="feature-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span class="feature-title">Location Quality</span>
+              </div>
+              <div class="badge-container">
+                <span class="badge badge-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                    <polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                  <span>{{ quality_label or 'Zone' }}</span>
+                </span>
+                <span class="badge badge-secondary">{{ location_type or 'Location' }}</span>
+              </div>
+            </div>
+            
+            <!-- Price Comparison Chart (Chart.js) -->
+            <div class="card feature-card">
+              <div class="feature-header">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" x2="18" y1="20" y2="10"/>
+                  <line x1="12" x2="12" y1="20" y2="4"/>
+                  <line x1="6" x2="6" y1="20" y2="14"/>
+                </svg>
+                <span class="feature-title">Price Comparison</span>
+              </div>
+                <div class="chart-container">
+              <canvas id="priceComparisonChart"></canvas>
+              </div>
+              <p class="feature-footer">Based on Boston Housing Dataset (values in $1000s)</p>
+            </div>
+            
+            <!-- Price Trend Chart (Chart.js) -->
+            <div class="card feature-card">
+              <div class="feature-header" style="justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                    <polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                  <span class="feature-title">Price Trend (6 Months)</span>
+                </div>
+                  <span class="trend-badge {% if trend_percent >= 0 %}trend-positive{% else %}trend-negative{% endif %}">
+                {% if trend_percent >= 0 %}+{% endif %}{{ trend_percent }}%
+              </span>
+              </div>
+            <div class="chart-container">
+              <canvas id="priceTrendChart"></canvas>
+              </div>
+              <p class="feature-footer">Projected market trend based on prediction</p>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <footer class="footer">
+        Powered by Machine Learning • Boston Housing Dataset
+      </footer>
+    </div>
 
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(240,128,128,0.4);
-    }
+    <script>
+    // Form submit loading state
+      document.getElementById('predictionForm').addEventListener('submit', function() {
+        document.getElementById('btnText').classList.add('hidden');
+        document.getElementById('btnLoading').classList.remove('hidden');
+        document.getElementById('submitBtn').disabled = true;
+      });
 
-    /* Responsive */
-    @media (max-width: 600px) {
-      form {
-        grid-template-columns: 1fr;
-      }
+      {% if prediction_text %}
+      // ============ CHART.JS CONFIGURATION ============
+      
+      // Data from Flask backend
+      const predictionValue = {{ prediction_value or 0 }};
+      const minPrice = {{ min_price or 5 }};
+      const avgPrice = {{ avg_price or 22.5 }};
+      const maxPrice = {{ max_price or 50 }};
+      const trendPrices = {{ trend_prices | tojson if trend_prices else '[0,0,0,0,0,0]' }};
+      const trendPercent = {{ trend_percent or 0 }};
+      
+      // Chart.js Global Defaults
+      Chart.defaults.font.family = "'Hind', sans-serif";
+      Chart.defaults.color = '#e0e0e0';
+      
+      // ============ PRICE COMPARISON BAR CHART ============
+      const priceComparisonCtx = document.getElementById('priceComparisonChart').getContext('2d');
+      
+      new Chart(priceComparisonCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Min', 'Avg', 'Yours', 'Max'],
+          datasets: [{
+            label: 'Price ($1000s)',
+            data: [minPrice, avgPrice, predictionValue, maxPrice],
+            backgroundColor: [
+              'rgba(139, 0, 0, 0.6)',   // Min - dark red
+              'rgba(139, 0, 0, 0.4)',   // Avg - muted red
+              'rgba(220, 20, 60, 1)',   // Yours - bright crimson (highlighted)
+              'rgba(139, 0, 0, 0.6)'    // Max - dark red
+            ],
+            borderColor: [
+              'rgba(139, 0, 0, 1)',
+              'rgba(139, 0, 0, 0.8)',
+              'rgba(255, 99, 132, 1)',
+              'rgba(139, 0, 0, 1)'
+            ],
+            borderWidth: 2,
+            borderRadius: 6,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              titleColor: '#fff',
+              bodyColor: '#e0e0e0',
+              borderColor: 'rgba(220, 20, 60, 0.5)',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return `$${(context.raw * 1000).toLocaleString()}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: Math.ceil(maxPrice * 1.1),
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)',
+                drawBorder: false
+              },
+              ticks: {
+                callback: function(value) {
+                  return '$' + value + 'k';
+                }
+              }
+            },
+            x: {
+              grid: { display: false }
+            }
+          },
+          animation: {
+            duration: 1000,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+      
+      // ============ PRICE TREND LINE CHART ============
+      const priceTrendCtx = document.getElementById('priceTrendChart').getContext('2d');
+      
+      // Create gradient for area fill
+      const gradient = priceTrendCtx.createLinearGradient(0, 0, 0, 120);
+      gradient.addColorStop(0, 'rgba(220, 20, 60, 0.4)');
+      gradient.addColorStop(1, 'rgba(220, 20, 60, 0.05)');
+      new Chart(priceTrendCtx, {
+        type: 'line',
+        data: {
+          labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Current'],
+          datasets: [{
+            label: 'Price Trend',
+            data: trendPrices,
+            fill: true,
+            backgroundColor: gradient,
+            borderColor: 'rgba(220, 20, 60, 1)',
+            borderWidth: 3,
+            pointBackgroundColor: 'rgba(220, 20, 60, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(220, 20, 60, 1)',
+            pointHoverBorderWidth: 3,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              titleColor: '#fff',
+              bodyColor: '#e0e0e0',
+              borderColor: 'rgba(220, 20, 60, 0.5)',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return `$${(context.raw * 1000).toLocaleString()}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)',
+                drawBorder: false
+              },
+              ticks: {
+                callback: function(value) {
+                  return '$' + value.toFixed(0) + 'k';
+                }
+              }
+            },
+            x: {
+              grid: { display: false }
+            }
+          },
+          animation: {
+            duration: 1500,
+            easing: 'easeOutQuart'
+          },
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          }
+        }
+      });
+    {% endif %}
 
-      h1 {
-        font-size: 26px;
-      }
+    </script>
 
-      form input[type="text"], .prediction-text {
-        font-size: 15px;
-        padding: 14px 16px;
-      }
+  </body>
 
-      button {
-        font-size: 16px;
-        padding: 16px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Boston House Price Prediction</h1>
-    <form action="{{ url_for('predict')}}" method="post">
-      <input type="text" name="CRIM" placeholder="CRIM" required>
-      <input type="text" name="ZN" placeholder="ZN" required>
-      <input type="text" name="INDUS" placeholder="INDUS" required>
-      <input type="text" name="CHAS" placeholder="CHAS" required>
-      <input type="text" name="NOX" placeholder="NOX" required>
-      <input type="text" name="RM" placeholder="RM" required>
-      <input type="text" name="Age" placeholder="Age" required>
-      <input type="text" name="DIS" placeholder="DIS" required>
-      <input type="text" name="RAD" placeholder="RAD" required>
-      <input type="text" name="TAX" placeholder="TAX" required>
-      <input type="text" name="PTRATIO" placeholder="PTRATIO" required>
-      <input type="text" name="B" placeholder="B" required>
-      <input type="text" name="LSTAT" placeholder="LSTAT" required>
-      <button type="submit">Predict</button>
-
-      <!-- Prediction placeholder styled as input -->
-      <input type="text" class="prediction-text" placeholder="Prediction will appear here" value="{{ prediction_text }}" readonly>
-    </form>
-  </div>
-</body>
 </html>

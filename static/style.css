@@ -1,0 +1,622 @@
+/* ============================================
+   Boston House Price Predictor - Stylesheet
+   Black & Royal Red Theme with Chart.js
+   ============================================ */
+
+/* ============================================
+   CSS Variables
+   ============================================ */
+:root {
+  /* Text */
+  --foreground: #1a1a1a;
+
+  /* Glass Cards */
+  --card: rgba(255, 255, 255, 0.65);
+
+  /* Primary Buttons */
+  --primary: #b23a48;        /* warmer red */
+  --primary-hover: #8c2d37;
+  --primary-foreground: #ffffff;
+
+  /* Accent (icons / highlights) */
+  --accent: #d4a373;
+
+  /* Borders */
+  --border: rgba(255,255,255,0.35);
+
+  /* Shadows */
+  --shadow-soft: 0 15px 40px rgba(0,0,0,0.18);
+  --shadow-button: 0 6px 20px rgba(178,58,72,0.35);
+  --shadow-button-hover: 0 10px 30px rgba(178,58,72,0.5);
+}
+
+/* ============================================
+   Reset
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* body {
+  font-family: 'Hind', sans-serif;
+  background: var(--gradient-bg);
+  color: var(--foreground);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */
+
+body {
+  font-family: 'Hind', sans-serif;
+
+  background:
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    url("images/bg.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+
+  color: var(--foreground);
+  min-height: 100vh;
+
+  transition: background 0.4s ease;
+}
+
+/* ============================================
+   Layout
+   ============================================ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .main-grid {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+/* .card {
+  background: var(--card);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+} */
+
+.card {
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.35);
+
+  box-shadow: var(--shadow-soft);
+  padding: 1.5rem;
+
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+}
+
+
+
+@media (min-width: 768px) {
+  .card {
+    padding: 2rem;
+  }
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card-full {
+  grid-column: 1 / -1;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* .header-icon {
+  display: inline-flex;
+  padding: 0.625rem;
+  background: var(--primary);
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+} */
+.icon-box,
+.header-icon {
+  background: rgba(178,58,72,0.15);
+  color: var(--primary);
+}
+
+
+.header-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--primary-foreground);
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .header-title {
+    font-size: 1.875rem;
+  }
+}
+
+.header-subtitle {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+/* ============================================
+   Form
+   ============================================ */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-group {
+  width: 100%;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(26, 26, 26, 0.8);
+  margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  height: 3rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  font-family: 'Arimo', sans-serif;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  transition: all 0.2s ease-out;
+}
+
+.form-input::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-input:hover,
+.form-select:hover {
+  border-color: var(--muted-foreground);
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-input-focus);
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+/* ============================================
+   Button
+   ============================================ */
+.btn-primary {
+  width: 100%;
+  height: 3rem;
+  padding: 0 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-family: 'Hind', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow-button);
+  transition: all 0.2s ease-out;
+} 
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-button);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+  box-shadow: var(--shadow-button-hover);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent);
+  box-shadow: var(--shadow-button-hover);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-button);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* ============================================
+   Results Placeholder
+   ============================================ */
+.results-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.results-placeholder-icon {
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-placeholder-icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.results-placeholder p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* ============================================
+   Price Result
+   ============================================ */
+.result-price {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.result-price-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+  margin-bottom: 0.25rem;
+}
+
+.result-price-value {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.result-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 1rem;
+}
+
+.result-insights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.result-insights-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+  margin-bottom: 0.5rem;
+}
+
+.insight-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.insight-positive {
+  background: var(--secondary);
+  color: var(--foreground);
+}
+
+.insight-warning {
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.insight-item svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Feature Cards
+   ============================================ */
+.feature-card {
+  padding: 1.25rem;
+}
+
+.feature-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.feature-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feature-header svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--foreground);
+}
+
+.feature-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.feature-footer {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+/* ============================================
+   Livability Meter
+   ============================================ */
+.meter-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.meter-bar {
+  flex: 1;
+  height: 0.625rem;
+  background: var(--secondary);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 9999px;
+  transition: width 0.5s ease-out;
+}
+
+.meter-score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.meter-score-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.meter-score-max {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+/* ============================================
+   Badges
+   ============================================ */
+.badge-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.badge-secondary {
+  background: var(--secondary);
+  color: var(--foreground);
+}
+
+.badge svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+/* ============================================
+   Chart.js Containers
+   ============================================ */
+.chart-container {
+  position: relative;
+  height: 140px;
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.chart-container canvas {
+  max-height: 100%;
+}
+
+/* ============================================
+   Trend Badges
+   ============================================ */
+.trend-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.trend-positive {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.trend-negative {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* ============================================
+   Utilities
+   ============================================ */
+.hidden {
+  display: none !important;
+}
